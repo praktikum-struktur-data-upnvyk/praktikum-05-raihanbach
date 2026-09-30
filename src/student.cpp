@@ -71,21 +71,56 @@ string display(Stack& s) {
 
 // SOAL 1
 bool push(Stack& s, int nilai) {
-    return false;
+    Node* baru = new (nothrow) Node;
+    if (baru == nullptr) return false;
+ 
+    baru->data = nilai;
+    baru->next = s.top;   
+    s.top = baru;         
+    return true;
 }
 
 // SOAL 2
 bool pop(Stack& s, int& nilai) {
-    return false;
+    if (s.top == nullptr) return false;   
+ 
+    Node* hapus = s.top;
+    nilai = hapus->data;      
+    s.top = hapus->next;     
+    delete hapus;
+    return true;
 }
 
 // SOAL 3
 void clear(Stack& s) {
+    Node* p = s.top;
+    while (p != nullptr) {
+        Node* berikut = p->next;   
+        delete p;
+        p = berikut;
+    }
+    s.top = nullptr;
 }
 
 // SOAL 4
 bool kurungSeimbang(const string& ekspresi) {
-    return false;
+    Stack st;
+    inisialisasi(st);
+    bool ok = true;
+
+    for (char c : ekspresi) {
+        if (c == '(' || c == '[' || c == '{') {
+            push(st, c);
+        } else if (c == ')' || c == ']' || c == '}') {
+            char buka = (c == ')') ? '(' : (c == ']') ? '[' : '{';
+            int atas;
+            if (!pop(st, atas) || atas != buka) { ok = false; break; }
+        }
+    }
+
+    if (!isEmpty(st)) ok = false;   
+    clear(st);                      
+    return ok;
 }
 
 // =============================================================================
